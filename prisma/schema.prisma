@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  names    String
+  password String
+  role     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  reservations Reservation[] @relation("user-reservation")
+}
+
+model Team {
+  id    String @id @default(uuid())
+  title String
+  town  String
+  sigle String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  gamesOne Game[] @relation("game_team")
+  gamesTwo Game[] @relation("game_team2")
+}
+
+model Competition {
+  id          String @id @default(uuid())
+  title       String
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  games Game[] @relation("game_competition")
+}
+
+model Game {
+  id   String   @id @default(uuid())
+  date DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  teamOneId String?
+  teamTwoId String?
+  TeamOne   Team?   @relation("game_team", fields: [teamOneId], references: [id])
+  TeamTwo   Team?   @relation("game_team2", fields: [teamTwoId], references: [id])
+
+  competitionId String?
+  Competition   Competition?  @relation("game_competition", fields: [competitionId], references: [id])
+  Reservation   Reservation[] @relation("game_reservation")
+}
+
+model Reservation {
+  id   String   @id @default(uuid())
+  date DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  userId String?
+  User   User?   @relation("user-reservation", fields: [userId], references: [id])
+
+  gameId String?
+  Game   Game?   @relation("game_reservation", fields: [gameId], references: [id])
+}
