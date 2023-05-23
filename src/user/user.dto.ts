@@ -10,8 +10,12 @@ export class CreateUserDTO {
   names: string;
 
   @IsString()
-  @IsOptional()
-  role?: string;
+  @IsNotEmpty()
+  role: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }
 
 export class UpdateUserDTO {
