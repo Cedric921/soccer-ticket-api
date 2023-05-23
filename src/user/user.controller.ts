@@ -27,7 +27,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Get('me')
   getConnectedUser(@Req() req: Request) {
-    return { user: req.user };
+    return { data: req.user };
   }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
