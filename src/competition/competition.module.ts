@@ -1,4 +1,8 @@
 import { Module } from '@nestjs/common';
+import { CompetitionService } from './competition.service';
 
-@Module({})
+@Module({
+  providers: [CompetitionService],
+  exports: [CompetitionService],
+})
 export class CompetitionModule {}
