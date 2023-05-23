@@ -5,14 +5,14 @@ import {
   Param,
   Post,
   Put,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { UserService } from './user.service';
 import { CreateUserDTO, UpdateUserDTO } from './user.dto';
+import { GetUser } from 'src/auth/decorator/getUser.decorator';
+import { User } from '@prisma/client';
 
 @Controller('users')
 export class UserController {
@@ -26,8 +26,8 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Get('me')
-  getConnectedUser(@Req() req: Request) {
-    return { data: req.user };
+  getConnectedUser(@GetUser() user: User) {
+    return { data: user };
   }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
