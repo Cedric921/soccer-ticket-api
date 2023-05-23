@@ -11,13 +11,17 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { UserService } from './user.service';
+import { CreateUserDTO, UpdateUserDTO } from './user.dto';
 
 @Controller('users')
 export class UserController {
+  constructor(private readonly userService: UserService) {}
+
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Get()
   getUsers() {
-    return { message: 'all users' };
+    return this.userService.getUsers();
   }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
@@ -29,18 +33,18 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Get(':id')
   getUser(@Param('id') id: string) {
-    return { message: 'One user', id };
+    return this.userService.getOne(id);
   }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Post()
-  createUser(@Body() dto: any) {
-    return { message: 'created', dto };
+  createUser(@Body() dto: CreateUserDTO) {
+    return this.userService.create(dto);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
-  updateUser(@Body() dto: any, @Param('id') id: string) {
-    return { message: 'updated ', id, dto };
+  updateUser(@Body() dto: UpdateUserDTO, @Param('id') id: string) {
+    return this.userService.updateUser(id, dto);
   }
 }
