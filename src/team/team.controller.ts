@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateTeamDTO, UpdateTeamDTO } from './team.dto';
 
 @Controller('teams')
 export class TeamController {
@@ -27,13 +28,13 @@ export class TeamController {
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Post()
-  createTeam(@Body() dto: any) {
+  createTeam(@Body() dto: CreateTeamDTO) {
     return this.teamService.createTeam(dto);
   }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Put(':id')
-  updateTeam(@Param('id') id: string, @Body() dto: any) {
+  updateTeam(@Param('id') id: string, @Body() dto: UpdateTeamDTO) {
     return this.teamService.updateTeam(id, dto);
   }
 }
