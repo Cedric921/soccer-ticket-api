@@ -13,7 +13,19 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
-  async signup(dto: SignupDTO) {
+  async signup(dto: SignupDTO): Promise<{
+    message: string;
+    data: {
+      token: string;
+      id: string;
+      email: string;
+      names: string;
+      password: string;
+      role: string;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+  }> {
     try {
       //  generate hash
       const hash = await argon.hash(dto.password);
@@ -31,8 +43,10 @@ export class AuthService {
       delete user.password;
       // generate token
 
+      const token = await this.signToken(user.id, user.email);
+
       // return saved user
-      return { message: 'user created', data: user };
+      return { message: 'user created', data: { ...user, token } };
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         console.log('line11', { error });
@@ -44,7 +58,19 @@ export class AuthService {
     }
   }
 
-  async login(dto: LoginDTO) {
+  async login(dto: LoginDTO): Promise<{
+    message: string;
+    data: {
+      token: string;
+      id: string;
+      email: string;
+      names: string;
+      password: string;
+      role: string;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+  }> {
     const user = await this.prisma.user.findFirst({
       where: {
         email: dto.email,
