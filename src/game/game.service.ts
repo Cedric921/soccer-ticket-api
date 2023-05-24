@@ -1,6 +1,7 @@
 import { Competition, Game, Reservation, Team } from '@prisma/client';
 import { PrismaService } from './../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { CreateGameDto, UpdateGameDto } from './game.dto';
 
 @Injectable()
 export class GameService {
@@ -40,14 +41,16 @@ export class GameService {
     return { message: 'game fetched, teams', data };
   }
 
-  async createGame(dto: any): Promise<{ message: string; data: Game }> {
+  async createGame(
+    dto: CreateGameDto,
+  ): Promise<{ message: string; data: Game }> {
     const data = await this.prisma.game.create({ data: dto });
     return { message: ' game saved ', data };
   }
 
   async updateGame(
     id: string,
-    dto: any,
+    dto: UpdateGameDto,
   ): Promise<{ message: string; data: Game }> {
     const data = await this.prisma.game.update({ where: { id }, data: dto });
     return { message: 'updated game', data };
