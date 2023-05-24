@@ -1,4 +1,10 @@
-import { IsDate, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateGameDto {
   @IsUUID()
@@ -13,7 +19,7 @@ export class CreateGameDto {
   @IsNotEmpty()
   competitionId: string;
 
-  @IsDate()
+  @IsString()
   @IsNotEmpty()
   date: Date;
 }
@@ -31,7 +37,7 @@ export class UpdateGameDto {
   @IsOptional()
   competitionId?: string;
 
-  @IsDate()
+  @IsString()
   @IsOptional()
   date?: Date;
 }
