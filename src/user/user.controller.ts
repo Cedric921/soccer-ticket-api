@@ -24,13 +24,13 @@ export class UserController {
     return this.userService.getUsers();
   }
 
-  @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN', 'USER']))
   @Get('me')
   getConnectedUser(@GetUser() user: User) {
     return { data: user };
   }
 
-  @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN', 'USER']))
   @Get(':id')
   getUser(@Param('id') id: string) {
     return this.userService.getOne(id);
@@ -42,7 +42,7 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN', 'USER']))
   @Put(':id')
   updateUser(@Body() dto: UpdateUserDTO, @Param('id') id: string) {
     return this.userService.updateUser(id, dto);
