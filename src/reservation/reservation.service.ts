@@ -10,7 +10,11 @@ export class ReservationService {
     message: string;
     data: Reservation[];
   }> {
-    const data = await this.prisma.reservation.findMany();
+    const data = await this.prisma.reservation.findMany({
+      include: {
+        Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
+      },
+    });
     return { message: 'reservation fetched', data };
   }
 
@@ -18,7 +22,12 @@ export class ReservationService {
     message: string;
     data: Reservation[];
   }> {
-    const data = await this.prisma.reservation.findMany({ where: { userId } });
+    const data = await this.prisma.reservation.findMany({
+      where: { userId },
+      include: {
+        Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
+      },
+    });
     return { message: 'my reservation fetched', data };
   }
 
