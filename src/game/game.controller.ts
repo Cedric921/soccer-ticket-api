@@ -10,6 +10,7 @@ import {
 import { GameService } from './game.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { CreateGameDto, UpdateGameDto } from './game.dto';
 
 @Controller('games')
 export class GameController {
@@ -27,13 +28,13 @@ export class GameController {
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Post()
-  createGame(@Body() dto: any) {
+  createGame(@Body() dto: CreateGameDto) {
     return this.gameService.createGame(dto);
   }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Put(':id')
-  updateGame(@Param('id') id: string, @Body() dto: any) {
+  updateGame(@Param('id') id: string, @Body() dto: UpdateGameDto) {
     return this.gameService.updateGame(id, dto);
   }
 }
