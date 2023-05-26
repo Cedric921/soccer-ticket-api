@@ -1,5 +1,5 @@
 import { RolesGuard } from 'src/auth/guard/roles.guard';
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorator/getUser.decorator';
 import { User } from '@prisma/client';
@@ -13,6 +13,12 @@ export class ReservationController {
   @Get()
   getAll() {
     return this.reservationService.getAll();
+  }
+
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
+  @Get(':id')
+  getOne(@Param('id') id: string) {
+    return this.reservationService.getOne(id);
   }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN', 'USER']))

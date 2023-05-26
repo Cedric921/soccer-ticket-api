@@ -18,6 +18,19 @@ export class ReservationService {
     return { message: 'reservation fetched', data };
   }
 
+  async getOne(id: string): Promise<{
+    message: string;
+    data: Reservation;
+  }> {
+    const data = await this.prisma.reservation.findUnique({
+      where: { id },
+      include: {
+        Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
+      },
+    });
+    return { message: 'reservation fetched', data };
+  }
+
   async userReservation(userId: string): Promise<{
     message: string;
     data: Reservation[];
