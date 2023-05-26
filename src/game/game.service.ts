@@ -45,7 +45,11 @@ export class GameService {
     dto: CreateGameDto,
   ): Promise<{ message: string; data: Game }> {
     const data = await this.prisma.game.create({ data: dto });
-    return { message: ' game saved ', data };
+    const game = await this.prisma.game.findUnique({
+      where: { id: data.id },
+      include: { TeamOne: true, TeamTwo: true },
+    });
+    return { message: ' game saved ', data: game };
   }
 
   async updateGame(

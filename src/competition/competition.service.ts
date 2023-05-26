@@ -23,7 +23,7 @@ export class CompetitionService {
   }> {
     const data = await this.prisma.competition.findUnique({
       where: { id },
-      include: { games: true },
+      include: { games: { include: { TeamOne: true, TeamTwo: true } } },
     });
     return { message: 'get competition details, games ', data };
   }
