@@ -13,6 +13,7 @@ export class ReservationService {
     const data = await this.prisma.reservation.findMany({
       include: {
         Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
+        User: true,
       },
     });
     return { message: 'reservation fetched', data };
@@ -26,6 +27,7 @@ export class ReservationService {
       where: { id },
       include: {
         Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
+        User: true,
       },
     });
     return { message: 'reservation fetched', data };
@@ -39,6 +41,7 @@ export class ReservationService {
       where: { userId },
       include: {
         Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
+        User: true,
       },
     });
     return { message: 'my reservation fetched', data };
