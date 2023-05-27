@@ -1,10 +1,15 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Reservation } from '@prisma/client';
+import { Reservation, User } from '@prisma/client';
+import { EmailService } from 'src/email/email.service';
+import { CreateReservationDTO } from './reservation.dto';
 
 @Injectable()
 export class ReservationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private emailService: EmailService,
+  ) {}
 
   async getAll(): Promise<{
     message: string;
@@ -47,11 +52,18 @@ export class ReservationService {
     return { message: 'my reservation fetched', data };
   }
 
-  async create(dto: any): Promise<{
+  async create(
+    dto: CreateReservationDTO,
+    user: User,
+  ): Promise<{
     message: string;
     data: Reservation;
   }> {
-    const data = await this.prisma.reservation.create({ data: dto });
+    const data = await this.prisma.reservation.create({
+      data: { ...dto, userId: user.id, date: new Date() },
+    });
+
+    await this.emailService.sendUserTicket(user, data);
     return { message: ' reservation created', data };
   }
 }
