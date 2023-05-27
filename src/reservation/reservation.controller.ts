@@ -4,6 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorator/getUser.decorator';
 import { User } from '@prisma/client';
 import { ReservationService } from './reservation.service';
+import { CreateReservationDTO } from './reservation.dto';
 
 @Controller('reservations')
 export class ReservationController {
@@ -29,7 +30,7 @@ export class ReservationController {
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN', 'USER']))
   @Post()
-  createReservation(@Body() dto: any) {
-    return this.reservationService.create(dto);
+  createReservation(@Body() dto: CreateReservationDTO, @GetUser() user: User) {
+    return this.reservationService.create(dto, user);
   }
 }
