@@ -8,7 +8,6 @@ import { GameModule } from './game/game.module';
 import { CompetitionModule } from './competition/competition.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { AppLoggerMiddleware } from './middleware/logger';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailModule } from './email/email.module';
 
 @Module({
