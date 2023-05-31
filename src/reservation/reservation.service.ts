@@ -57,10 +57,27 @@ export class ReservationService {
     user: User,
   ): Promise<{
     message: string;
-    data: Reservation;
+    data: Reservation | null;
   }> {
+    const reserved = await this.prisma.reservation.findMany({
+      where: { gameId: dto.gameId },
+    });
+
+    const game = await this.prisma.game.findUnique({
+      where: { id: dto.gameId },
+    });
+
+    if (game.places >= reserved.length) {
+      return { message: 'reservation failed', data: null };
+    }
+
     const data = await this.prisma.reservation.create({
-      data: { ...dto, userId: user.id, date: new Date() },
+      data: {
+        ...dto,
+        userId: user.id,
+        date: new Date(),
+        place: reserved.length + 1,
+      },
     });
 
     await this.emailService.sendUserTicket(user, data);

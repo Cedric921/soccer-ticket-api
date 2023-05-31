@@ -48,8 +48,9 @@ model Competition {
 }
 
 model Game {
-  id   String   @id @default(uuid())
-  date DateTime
+  id     String   @id @default(uuid())
+  date   DateTime
+  places Int      @default(100)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -65,8 +66,9 @@ model Game {
 }
 
 model Reservation {
-  id   String   @id @default(uuid())
-  date DateTime
+  id    String   @id @default(uuid())
+  date  DateTime
+  place Int      @default(1)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
