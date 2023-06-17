@@ -13,8 +13,9 @@ export class EmailService {
       template: './ticket',
       context: {
         names: user.names,
-        code_ticket: ticket.id,
+        code_ticket: ticket.uniqueCode,
         date: ticket.date,
+        place: ticket.place,
       },
     });
   }

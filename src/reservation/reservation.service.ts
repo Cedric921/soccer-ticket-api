@@ -67,9 +67,11 @@ export class ReservationService {
       where: { id: dto.gameId },
     });
 
-    if (game.places >= reserved.length) {
+    if (game.places <= reserved.length) {
       return { message: 'reservation failed', data: null };
     }
+
+    const uniqueCode = new Date().getTime();
 
     const data = await this.prisma.reservation.create({
       data: {
@@ -77,6 +79,7 @@ export class ReservationService {
         userId: user.id,
         date: new Date(),
         place: reserved.length + 1,
+        uniqueCode: uniqueCode.toString(),
       },
     });
 

@@ -1,6 +1,7 @@
 import {
   IsDate,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUUID,
@@ -14,6 +15,9 @@ export class CreateGameDto {
   @IsUUID()
   @IsNotEmpty()
   teamTwoId: string;
+
+  @IsNumber()
+  places: number;
 
   @IsUUID()
   @IsNotEmpty()

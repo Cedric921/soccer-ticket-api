@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -72,6 +72,8 @@ model Reservation {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+
+  uniqueCode String @default("000000")
 
   userId String?
   User   User?   @relation("user-reservation", fields: [userId], references: [id])
