@@ -1,4 +1,4 @@
-import { Competition, Game, Reservation, Team } from '@prisma/client';
+import { Competition, Game, Reservation, Team, User } from '@prisma/client';
 import { PrismaService } from './../prisma/prisma.service';
 import { ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateGameDto, UpdateGameDto } from './game.dto';
@@ -12,11 +12,12 @@ export class GameService {
     data: (Game & {
       TeamOne: Team;
       TeamTwo: Team;
+      Reservation: (Reservation & { User: User })[];
     })[];
   }> {
     try {
       const data = await this.prisma.game.findMany({
-        include: { TeamOne: true, TeamTwo: true },
+        include: { TeamOne: true, TeamTwo: true, Reservation: { include: { User: true } } },
       });
       return { message: 'games fetched', data };
     } catch (error) {
@@ -30,7 +31,7 @@ export class GameService {
       TeamOne: Team;
       TeamTwo: Team;
       Competition: Competition;
-      Reservation: Reservation[];
+      Reservation: (Reservation & { User: User })[];
     };
   }> {
     try {
@@ -40,7 +41,11 @@ export class GameService {
           TeamOne: true,
           TeamTwo: true,
           Competition: true,
-          Reservation: true,
+          Reservation: {
+            include: {
+              User: true
+            }
+          }
         },
       });
       return { message: 'game fetched, teams', data };

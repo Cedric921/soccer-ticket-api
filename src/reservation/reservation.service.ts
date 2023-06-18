@@ -28,13 +28,13 @@ export class ReservationService {
     }
   }
 
-  async getOne(id: string): Promise<{
+  async getOne(uniqueCode: string): Promise<{
     message: string;
     data: Reservation;
   }> {
     try {
       const data = await this.prisma.reservation.findUnique({
-        where: { id },
+        where: { id: uniqueCode },
         include: {
           Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
           User: true,
@@ -99,6 +99,7 @@ export class ReservationService {
       await this.emailService.sendUserTicket(user, data);
       return { message: ' reservation created', data };
     } catch (error) {
+      console.log(error)
       throw new InternalServerErrorException(error)
     }
   }

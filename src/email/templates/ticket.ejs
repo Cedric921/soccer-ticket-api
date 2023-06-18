@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <title>Ticket de réservation</title>
-    <style>
-      /* Styles CSS pour la mise en page */
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background-color: #f2f2f2;
-      }
 
-      .container {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-      }
+<head>
+  <title>Ticket de réservation</title>
+  <style>
+    /* Styles CSS pour la mise en page */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
 
-      h2,
-      h3 {
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <p>Hey <%= names %>,</p>
-      <p>
-        Vous venez d'effectuer une réservation pour le match du <%= date %>.
-      </p>
+    .container {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
 
-      <p>
-        Merci de montrer ce code à la réception le jour de la rencontre (match)
-        :
-      </p>
-      <div>
-        <h2><%= code_ticket %></h2>
-        <h3><%= place %></h3>
-      </div>
+    h2,
+    h3 {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
 
-      <p>Merci de nous avoir fait confiance.</p>
+<body>
+  <div class="container">
+    <p>Hey <%= names %>,</p>
+    <p>
+      Vous venez d'effectuer une réservation pour le match du <%= date %>.
+    </p>
+
+    <p>
+      Merci de montrer ce code à la réception le jour de la rencontre (match)
+      :
+    </p>
+    <div>
+      <h2>Numero unique du billet: <%= code_ticket %>
+      </h2>
+      <h3>Place au stade: <%= place %>
+      </h3>
     </div>
-  </body>
+
+    <p>Merci de nous avoir fait confiance.</p>
+  </div>
+</body>
+
 </html>

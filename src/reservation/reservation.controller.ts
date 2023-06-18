@@ -8,7 +8,7 @@ import { CreateReservationDTO } from './reservation.dto';
 
 @Controller('reservations')
 export class ReservationController {
-  constructor(private readonly reservationService: ReservationService) {}
+  constructor(private readonly reservationService: ReservationService) { }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
   @Get()
@@ -17,9 +17,9 @@ export class ReservationController {
   }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN']))
-  @Get(':id')
-  getOne(@Param('id') id: string) {
-    return this.reservationService.getOne(id);
+  @Get(':uniqueCode')
+  getOne(@Param('uniqueCode') uniqueCode: string) {
+    return this.reservationService.getOne(uniqueCode);
   }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(['ADMIN', 'USER']))
