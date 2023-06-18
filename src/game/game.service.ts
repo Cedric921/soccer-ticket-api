@@ -1,11 +1,11 @@
 import { Competition, Game, Reservation, Team } from '@prisma/client';
 import { PrismaService } from './../prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateGameDto, UpdateGameDto } from './game.dto';
 
 @Injectable()
 export class GameService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async getGames(): Promise<{
     message: string;
@@ -44,6 +44,9 @@ export class GameService {
   async createGame(
     dto: CreateGameDto,
   ): Promise<{ message: string; data: Game }> {
+    if (dto.date < new Date()) {
+      throw new ForbiddenException('La date ne doit pas etre dans le passé');
+    }
     const data = await this.prisma.game.create({ data: dto });
     const game = await this.prisma.game.findUnique({
       where: { id: data.id },
@@ -56,6 +59,10 @@ export class GameService {
     id: string,
     dto: UpdateGameDto,
   ): Promise<{ message: string; data: Game }> {
+    if (dto.date < new Date()) {
+      throw new ForbiddenException('La date ne doit pas etre dans le passé');
+    }
+
     const data = await this.prisma.game.update({ where: { id }, data: dto });
     return { message: 'updated game', data };
   }

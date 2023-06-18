@@ -9,7 +9,7 @@ export class ReservationService {
   constructor(
     private readonly prisma: PrismaService,
     private emailService: EmailService,
-  ) {}
+  ) { }
 
   async getAll(): Promise<{
     message: string;
@@ -59,6 +59,7 @@ export class ReservationService {
     message: string;
     data: Reservation;
   }> {
+
     const data = await this.prisma.reservation.create({
       data: { ...dto, userId: user.id, date: new Date() },
     });
