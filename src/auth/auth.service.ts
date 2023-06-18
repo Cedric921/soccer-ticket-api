@@ -90,7 +90,7 @@ export class AuthService {
     const token = await this.signToken(user.id, user.email);
 
     delete user.password;
-    return { message: 'login succes', data: { ...user, token } };
+    return { message: 'account  succes', data: { ...user, token } };
   }
 
   async signToken(userId: string, email: string) {

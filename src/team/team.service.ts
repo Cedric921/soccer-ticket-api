@@ -1,17 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Game, Team } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TeamService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async getTeams(): Promise<{
     message: string;
     data: Team[];
   }> {
-    const data = await this.prisma.team.findMany();
-    return { message: 'teams fetched', data };
+    try {
+      const data = await this.prisma.team.findMany();
+      return { message: 'teams fetched', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 
   async getTeam(id: string): Promise<{
@@ -21,11 +25,15 @@ export class TeamService {
       gamesTwo: Game[];
     };
   }> {
-    const data = await this.prisma.team.findUnique({
-      where: { id },
-      include: { gamesOne: true, gamesTwo: true },
-    });
-    return { message: 'team fetched', data };
+    try {
+      const data = await this.prisma.team.findUnique({
+        where: { id },
+        include: { gamesOne: true, gamesTwo: true },
+      });
+      return { message: 'team fetched', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 
   async createTeam(dto: any): Promise<{
@@ -43,7 +51,11 @@ export class TeamService {
     message: string;
     data: Team;
   }> {
-    const data = await this.prisma.team.update({ where: { id }, data: dto });
-    return { message: 'team updated', data };
+    try {
+      const data = await this.prisma.team.update({ where: { id }, data: dto });
+      return { message: 'team updated', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Reservation, User } from '@prisma/client';
 import { EmailService } from 'src/email/email.service';
 import { CreateReservationDTO } from './reservation.dto';
@@ -15,41 +15,53 @@ export class ReservationService {
     message: string;
     data: Reservation[];
   }> {
-    const data = await this.prisma.reservation.findMany({
-      include: {
-        Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
-        User: true,
-      },
-    });
-    return { message: 'reservation fetched', data };
+    try {
+      const data = await this.prisma.reservation.findMany({
+        include: {
+          Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
+          User: true,
+        },
+      });
+      return { message: 'reservation fetched', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 
   async getOne(id: string): Promise<{
     message: string;
     data: Reservation;
   }> {
-    const data = await this.prisma.reservation.findUnique({
-      where: { id },
-      include: {
-        Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
-        User: true,
-      },
-    });
-    return { message: 'reservation fetched', data };
+    try {
+      const data = await this.prisma.reservation.findUnique({
+        where: { id },
+        include: {
+          Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
+          User: true,
+        },
+      });
+      return { message: 'reservation fetched', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 
   async userReservation(userId: string): Promise<{
     message: string;
     data: Reservation[];
   }> {
-    const data = await this.prisma.reservation.findMany({
-      where: { userId },
-      include: {
-        Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
-        User: true,
-      },
-    });
-    return { message: 'my reservation fetched', data };
+    try {
+      const data = await this.prisma.reservation.findMany({
+        where: { userId },
+        include: {
+          Game: { include: { TeamOne: true, TeamTwo: true, Competition: true } },
+          User: true,
+        },
+      });
+      return { message: 'my reservation fetched', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 
   async create(
@@ -57,14 +69,37 @@ export class ReservationService {
     user: User,
   ): Promise<{
     message: string;
-    data: Reservation;
+    data: Reservation | null;
   }> {
+    try {
+      const reserved = await this.prisma.reservation.findMany({
+        where: { gameId: dto.gameId },
+      });
 
-    const data = await this.prisma.reservation.create({
-      data: { ...dto, userId: user.id, date: new Date() },
-    });
+      const game = await this.prisma.game.findUnique({
+        where: { id: dto.gameId },
+      });
 
-    await this.emailService.sendUserTicket(user, data);
-    return { message: ' reservation created', data };
+      if (game.places <= reserved.length) {
+        return { message: 'reservation failed', data: null };
+      }
+
+      const uniqueCode = new Date().getTime();
+
+      const data = await this.prisma.reservation.create({
+        data: {
+          ...dto,
+          userId: user.id,
+          date: new Date(),
+          place: reserved.length + 1,
+          uniqueCode: uniqueCode.toString(),
+        },
+      });
+
+      await this.emailService.sendUserTicket(user, data);
+      return { message: ' reservation created', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 }
