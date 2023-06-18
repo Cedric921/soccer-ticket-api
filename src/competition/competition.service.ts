@@ -1,18 +1,22 @@
 import { PrismaService } from './../prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateCompetitionDTO, UpdateCompetitionDTO } from './competition.dto';
 import { Competition, Game } from '@prisma/client';
 
 @Injectable()
 export class CompetitionService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async getCompetitions(): Promise<{
     message: string;
     data: Competition[];
   }> {
-    const data = await this.prisma.competition.findMany();
-    return { message: 'competition list', data };
+    try {
+      const data = await this.prisma.competition.findMany();
+      return { message: 'competition list', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 
   async getCompetiton(id: string): Promise<{
@@ -21,19 +25,27 @@ export class CompetitionService {
       games: Game[];
     };
   }> {
-    const data = await this.prisma.competition.findUnique({
-      where: { id },
-      include: { games: { include: { TeamOne: true, TeamTwo: true } } },
-    });
-    return { message: 'get competition details, games ', data };
+    try {
+      const data = await this.prisma.competition.findUnique({
+        where: { id },
+        include: { games: { include: { TeamOne: true, TeamTwo: true } } },
+      });
+      return { message: 'get competition details, games ', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 
   async createCompetition(dto: CreateCompetitionDTO): Promise<{
     message: string;
     data: Competition;
   }> {
-    const data = await this.prisma.competition.create({ data: dto });
-    return { message: 'create new competion', data };
+    try {
+      const data = await this.prisma.competition.create({ data: dto });
+      return { message: 'create new competion', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 
   async updateCompetiton(
@@ -43,10 +55,14 @@ export class CompetitionService {
     message: string;
     data: Competition;
   }> {
-    const data = await this.prisma.competition.update({
-      where: { id },
-      data: dto,
-    });
-    return { message: 'update exist compet', data };
+    try {
+      const data = await this.prisma.competition.update({
+        where: { id },
+        data: dto,
+      });
+      return { message: 'update exist compet', data };
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 }
