@@ -26,6 +26,9 @@ export class CreateGameDto {
   @IsString()
   @IsNotEmpty()
   date: Date;
+
+  @IsNumber()
+  price: number;
 }
 
 export class UpdateGameDto {

@@ -1,4 +1,8 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 dependencies:
   '@nestjs-modules/mailer':
@@ -64,6 +68,9 @@ dependencies:
   rxjs:
     specifier: ^7.2.0
     version: 7.2.0
+  stripe:
+    specifier: ^12.9.0
+    version: 12.9.0
   uuid:
     specifier: ^9.0.0
     version: 9.0.0
@@ -6297,6 +6304,14 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
     dev: true
+
+  /stripe@12.9.0:
+    resolution: {integrity: sha512-stYtrWetRYUsEbsUVyJaPG9Sppt0ds2szBqXsuDG6KZPPuUmCccbpceLrhoOBwNl1RziEfNB7oG9wg1n2eW+EQ==}
+    engines: {node: '>=12.*'}
+    dependencies:
+      '@types/node': 18.15.11
+      qs: 6.11.2
+    dev: false
 
   /style-data@2.0.1:
     resolution: {integrity: sha512-frUbteLGDoNEJhbMIWtyNE1VRduZXmZozhct4F+qN++OzIQZNZJ8KToZlDEl3eaedRYlDfKvUoMFMyrZj4x/sg==}

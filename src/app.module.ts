@@ -9,6 +9,7 @@ import { CompetitionModule } from './competition/competition.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { AppLoggerMiddleware } from './middleware/logger';
 import { EmailModule } from './email/email.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { EmailModule } from './email/email.module';
       isGlobal: true,
     }),
     EmailModule,
+    StripeModule.forRoot(process.env.STRIPE_KEY, { apiVersion: '2022-11-15' }),
   ],
   controllers: [],
   providers: [],
