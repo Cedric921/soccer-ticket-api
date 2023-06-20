@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Game` ADD COLUMN `price` DECIMAL(65, 30) NOT NULL DEFAULT 10;

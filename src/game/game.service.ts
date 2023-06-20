@@ -1,11 +1,15 @@
 import { Competition, Game, Reservation, Team, User } from '@prisma/client';
 import { PrismaService } from './../prisma/prisma.service';
-import { ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateGameDto, UpdateGameDto } from './game.dto';
 
 @Injectable()
 export class GameService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async getGames(): Promise<{
     message: string;
@@ -17,11 +21,15 @@ export class GameService {
   }> {
     try {
       const data = await this.prisma.game.findMany({
-        include: { TeamOne: true, TeamTwo: true, Reservation: { include: { User: true } } },
+        include: {
+          TeamOne: true,
+          TeamTwo: true,
+          Reservation: { include: { User: true } },
+        },
       });
       return { message: 'games fetched', data };
     } catch (error) {
-      throw new InternalServerErrorException(error)
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -43,28 +51,29 @@ export class GameService {
           Competition: true,
           Reservation: {
             include: {
-              User: true
-            }
-          }
+              User: true,
+            },
+          },
         },
       });
       return { message: 'game fetched, teams', data };
-
     } catch (error) {
-      throw new InternalServerErrorException(error)
+      throw new InternalServerErrorException(error);
     }
   }
 
   async createGame(
     dto: CreateGameDto,
   ): Promise<{ message: string; data: Game }> {
-    const now = new Date().getTime()
+    const now = new Date().getTime();
     try {
       if (new Date(dto.date).getTime() < now) {
         throw new ForbiddenException('La date ne doit pas etre dans le passé');
       }
       if (dto.places < 200) {
-        throw new ForbiddenException('le nombre des places doit etre superieur a 200');
+        throw new ForbiddenException(
+          'le nombre des places doit etre superieur a 200',
+        );
       }
       const data = await this.prisma.game.create({ data: dto });
       const game = await this.prisma.game.findUnique({
@@ -73,8 +82,11 @@ export class GameService {
       });
       return { message: ' game saved ', data: game };
     } catch (error) {
-      console.log({ error, now, dat: new Date(dto.date).getTime() }, new Date(dto.date).getTime() < now)
-      throw new InternalServerErrorException(error)
+      console.log(
+        { error, now, dat: new Date(dto.date).getTime() },
+        new Date(dto.date).getTime() < now,
+      );
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -90,7 +102,7 @@ export class GameService {
       const data = await this.prisma.game.update({ where: { id }, data: dto });
       return { message: 'updated game', data };
     } catch (error) {
-      throw new InternalServerErrorException(error)
+      throw new InternalServerErrorException(error);
     }
   }
 }

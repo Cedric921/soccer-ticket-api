@@ -51,6 +51,7 @@ model Game {
   id     String   @id @default(uuid())
   date   DateTime
   places Int      @default(100)
+  price  Decimal  @default(10)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
